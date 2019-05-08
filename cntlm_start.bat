@@ -16,6 +16,7 @@ IF NOT EXIST %ENVFILE% (
 call:GetEnvValue "CNTLM_NO_PROXY" CNTLM_NO_PROXY
 call:GetEnvValue "CNTLM_LISTEN" CNTLM_LISTEN
 call:GetEnvValue "CNTLM_PROXY" CNTLM_PROXY
+call:GetEnvValue "PWD" PWD
 
 if not "%1" == "-y" (
     goto prompt_user
@@ -96,7 +97,11 @@ echo.
 echo.==================================================================
 echo.
 
-%~dp0cntlm.exe -v -d %userdomain% -u %username% -I -l !CNTLM_LISTEN! -N !CNTLM_NO_PROXY! !CNTLM_PROXY!
+if "!PWD!" == "" (
+	%~dp0cntlm.exe -v -d %userdomain% -u %username% -I -l !CNTLM_LISTEN! -N !CNTLM_NO_PROXY! !CNTLM_PROXY!
+) else (
+	%~dp0cntlm.exe -v -d %userdomain% -u %username% -p !PWD! -l !CNTLM_LISTEN! -N !CNTLM_NO_PROXY! !CNTLM_PROXY!
+)
 
 endlocal
 chcp %cp%>nul
